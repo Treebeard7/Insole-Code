@@ -15,9 +15,9 @@ const char* googlesheets = "/trigger/add_data/with/key/c1yTRHdDNP5x2irnUgpuy0";
 const char* server = "maker.ifttt.com";
 
 int keyIndex = 0;
-char sssid[] = SECRET_SSID;        // your network SSID (name)
+char sssid[] = SECRET_SSID;        
 char spass[] = SECRET_PASS; 
-int status = WL_IDLE_STATUS;                     // the Wifi radio's status
+int status = WL_IDLE_STATUS;                    
  
 
 boolean transmitting;
