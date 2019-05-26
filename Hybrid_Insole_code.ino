@@ -1,5 +1,11 @@
+#include <Arduino.h>
+#include <SPI.h>
+#include <WiFiNINA.h>
 #include <Fsr33.h>
-#include <WiFi.h>
+
+
+#define SECRET_SSID "ORBI72"
+#define SECRET_PASS "blackcar899"
 
 const char* ssid     = "ORBI72";
 const char* password = "blackcar899";
@@ -8,6 +14,11 @@ const char* peripheralforce = "/trigger/pfm/with/key/c1yTRHdDNP5x2irnUgpuy0";
 const char* googlesheets = "/trigger/add_data/with/key/c1yTRHdDNP5x2irnUgpuy0";
 const char* server = "maker.ifttt.com";
 
+int keyIndex = 0;
+char sssid[] = SECRET_SSID;        // your network SSID (name)
+char spass[] = SECRET_PASS; 
+int status = WL_IDLE_STATUS;                     // the Wifi radio's status
+ 
 
 boolean transmitting;
 String input = "";
@@ -37,14 +48,16 @@ Fsr33 peripheral[] = {fsr_edgeleft, fsr_edgeright, fsr_edgetoepad1, fsr_edgetoep
 
 
 void setup() {
-  while (! Serial) {delay(1);}
+  //while (! Serial) {delay(1);}
+ 
   Serial.begin(9600);
-  
+  init1();
   pinMode(motordisk, OUTPUT);
   Serial.println("DPN Insole Prototype");
   Serial.println("Testing v. 1");
   Serial.println("Please enter a command...");
   Serial.println();
+
 
   
 }
@@ -74,11 +87,12 @@ void loop() {
         for (int i = 1; i <= duration; i++) {    
           
           for (int j = 0; j < 6; j++) {
-            if (standard[j].standardForce()) {
+            if (!standard[j].standardForce()) {
               String sname = standard[j].getPart();
           
-              init();
+              //init();
               smakeIFTTTRequest(sname);
+              googlesheetsadd(sname);
             }
   
             }
@@ -87,7 +101,7 @@ void loop() {
           for (int k = 0; k < 5; k++) {
             if (peripheral[k].peripheralForce()) {
               String pname = peripheral[k].getPart();
-              init();
+              //init();
               pmakeIFTTTRequest(pname);
             }
           }
@@ -165,26 +179,20 @@ void beginMethod() {
   }
 }
 
-void init() {
+void init1() {
   Serial.print("Connecting to: "); 
   Serial.print(ssid);
-  WiFi.begin(ssid, password);  
+    while (status != WL_CONNECTED) {
+    Serial.print("Attempting to connect to WEP network, SSID: ");
+    Serial.println(sssid);
+    status = WiFi.begin(sssid, keyIndex, spass);
 
-  int timeout = 10 * 4; // 10 seconds
-  while(WiFi.status() != WL_CONNECTED  && (timeout-- > 0)) {
-    delay(250);
-    Serial.print(".");
-  }
-  Serial.println("");
-
-  if(WiFi.status() != WL_CONNECTED) {
-     Serial.println("Failed to connect, going back to sleep");
+    // wait 10 seconds for connection:
+    delay(1000);
   }
 
-  Serial.print("WiFi connected in: "); 
-  Serial.print(millis());
-  Serial.print(", IP address: "); 
-  Serial.println(WiFi.localIP());
+  // once you are connected :
+  Serial.print("You're connected to the network");
 }
 
 void smakeIFTTTRequest(String sname) {
@@ -216,7 +224,7 @@ void smakeIFTTTRequest(String sname) {
   client.println(jsonObject_sf.length());
   client.println();
   client.println(jsonObject_sf);
-        
+  
   int timeout = 5 * 10; // 5 seconds             
   while(!!!client.available() && (timeout-- > 0)){
     delay(100);
@@ -262,6 +270,51 @@ void pmakeIFTTTRequest(String pname) {
   client.println();
   client.println(jsonObject_pf);
         
+  int timeout = 5 * 10; // 5 seconds             
+  while(!!!client.available() && (timeout-- > 0)){
+    delay(100);
+  }
+  if(!!!client.available()) {
+    Serial.println("No response...");
+  }
+  while(client.available()){
+    Serial.write(client.read());
+  }
+  
+  Serial.println("\nclosing connection");
+  client.stop(); 
+}
+
+void googlesheetsadd(String aname) {
+  Serial.print("Connecting to "); 
+  Serial.print(server);
+  String temp = aname;
+  WiFiClient client;
+  int retries = 5;
+  while(!!!client.connect(server, 80) && (retries-- > 0)) {
+    Serial.print(".");
+  }
+  Serial.println();
+  if(!!!client.connected()) {
+    Serial.println("Failed to connect...");
+  }
+  
+  Serial.print("Request resource: "); 
+  Serial.println(googlesheets);
+
+  // Temperature in Celsius
+  String jsonObject_sf = String("{\"value1\":\"") + temp  + "\"}";
+                      
+ 
+                      
+  client.println(String("POST ") + googlesheets + " HTTP/1.1");
+  client.println(String("Host: ") + server); 
+  client.println("Connection: close\r\nContent-Type: application/json");
+  client.print("Content-Length: ");
+  client.println(jsonObject_sf.length());
+  client.println();
+  client.println(jsonObject_sf);
+  
   int timeout = 5 * 10; // 5 seconds             
   while(!!!client.available() && (timeout-- > 0)){
     delay(100);
