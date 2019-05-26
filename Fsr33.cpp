@@ -1,4 +1,4 @@
-// Create multiple ifttt events; one for each function. call each here
+
 #include "Arduino.h"
 #include "Fsr33.h"
 
