@@ -4,14 +4,14 @@
 #include <Fsr33.h>
 
 
-#define SECRET_SSID "ORBI72"
-#define SECRET_PASS "blackcar899"
+#define SECRET_SSID "XXXXXXXX" //Wifi network and password
+#define SECRET_PASS "XXXXXXXX"
 
-const char* ssid     = "ORBI72";
-const char* password = "blackcar899";
-const char* standardforce = "/trigger/sfm/with/key/c1yTRHdDNP5x2irnUgpuy0";
-const char* peripheralforce = "/trigger/pfm/with/key/c1yTRHdDNP5x2irnUgpuy0";
-const char* googlesheets = "/trigger/add_data/with/key/c1yTRHdDNP5x2irnUgpuy0";
+const char* ssid     = "XXXXXXXXX";
+const char* password = "XXXXXXXXX";
+const char* standardforce = "/trigger/sfm/with/key/XXXXXXXXXXXXXXXXXXX";    //IFTTT API Link
+const char* peripheralforce = "/trigger/pfm/with/key/XXXXXXXXXXXXXXXXXXXX";
+const char* googlesheets = "/trigger/add_data/with/key/XXXXXXXXXXXXXXXXXX";
 const char* server = "maker.ifttt.com";
 
 int keyIndex = 0;
