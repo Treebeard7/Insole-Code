@@ -87,7 +87,7 @@ void loop() {
         for (int i = 1; i <= duration; i++) {    
           
           for (int j = 0; j < 6; j++) {
-            if (!standard[j].standardForce()) {
+            if (standard[j].standardForce()) {
               String sname = standard[j].getPart();
           
               //init();
@@ -103,6 +103,7 @@ void loop() {
               String pname = peripheral[k].getPart();
               //init();
               pmakeIFTTTRequest(pname);
+             googlesheetsadd(pname);
             }
           }
        
