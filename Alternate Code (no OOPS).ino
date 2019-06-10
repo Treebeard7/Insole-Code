@@ -23,14 +23,14 @@ int counter7;
 int resetcounter1;
 
 
-#define SECRET_SSID "ORBI72"
-#define SECRET_PASS "blackcar899"
+#define SECRET_SSID "XXXXXXXXX"   //network name (ssid)
+#define SECRET_PASS "XXXXXXXXX"   //password
 
-const char* ssid     = "ORBI72";
-const char* password = "blackcar899";
-const char* standardforce = "/trigger/sfm/with/key/c1yTRHdDNP5x2irnUgpuy0";
-const char* peripheralforce = "/trigger/pfm/with/key/c1yTRHdDNP5x2irnUgpuy0";
-const char* googlesheets = "/trigger/add_data/with/key/c1yTRHdDNP5x2irnUgpuy0";
+const char* ssid     = "XXXXXXXXX";
+const char* password = "XXXXXXXXXX";
+const char* standardforce = "/trigger/sfm/with/key/XXXXXXXX";    //Use API key from IFTTT.com
+const char* peripheralforce = "/trigger/pfm/with/key/XXXXXXXX";
+const char* googlesheets = "/trigger/add_data/with/key/XXXXXXXXX";
 const char* server = "maker.ifttt.com";
 
 int keyIndex = 0;
@@ -151,7 +151,7 @@ boolean teststandardfsr(int a) {
   int b = a;
  
   int fsrReading = analogRead(b);
-  if (fsrReading > 20) {
+  if (fsrReading > 20) {                  //calibration numbers
     return false;
   }
   else {  
@@ -173,7 +173,7 @@ boolean testperipheralfsr(int j) {
   int k = j;
  
   int fsrReading1 = analogRead(k);
-  if (fsrReading1 < 20) {
+  if (fsrReading1 < 20) {                      //calibration numbers
     return false;
   }
   else {  
